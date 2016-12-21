@@ -23,12 +23,18 @@ init flags =
 
 type Note
     = A
+    | AB
     | B
     | C
+    | CD
     | D
+    | DE
     | E
     | F
+    | FG
     | G
+    | GA
+    | NextA
 
 
 toNote : Int -> Maybe Note
@@ -38,6 +44,10 @@ toNote keycode =
             {- a -}
             Just A
 
+        87 ->
+            {- w -}
+            Just AB
+
         83 ->
             {- s -}
             Just B
@@ -46,9 +56,21 @@ toNote keycode =
             {- d -}
             Just C
 
+        82 ->
+            {- r -}
+            Just CD
+
         70 ->
             {- f -}
             Just D
+
+        84 ->
+            {- t -}
+            Just DE
+
+        85 ->
+            {- u -}
+            Just DE
 
         74 ->
             {- j -}
@@ -58,9 +80,21 @@ toNote keycode =
             {- k -}
             Just F
 
+        79 ->
+            {- o -}
+            Just FG
+
         76 ->
             {- l -}
             Just G
+
+        80 ->
+            {- p -}
+            Just GA
+
+        186 ->
+            {- ; -}
+            Just NextA
 
         _ ->
             Nothing
@@ -73,6 +107,10 @@ toFrequency note =
             {- a -}
             220
 
+        AB ->
+            {- a#, bb -}
+            233.082
+
         B ->
             {- b -}
             246.942
@@ -81,9 +119,17 @@ toFrequency note =
             {- c -}
             261.626
 
+        CD ->
+            {- c#, db -}
+            277.183
+
         D ->
             {- d -}
             293.665
+
+        DE ->
+            {- d#, eb -}
+            311.127
 
         E ->
             {- e -}
@@ -93,6 +139,18 @@ toFrequency note =
             {- f -}
             349.228
 
+        FG ->
+            {- f#, gb -}
+            369.994
+
         G ->
             {- g -}
             391.995
+
+        GA ->
+            {- g#, ab -}
+            415.305
+
+        NextA ->
+            {- a -}
+            440
