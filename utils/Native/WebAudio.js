@@ -9,10 +9,11 @@ var oscillator = function(frequency) {
     oscillator.frequency.value = frequency; // value in hertz
     oscillator.connect(audioContext.destination);
     oscillator.start();
-    return oscillator.stop
+    return oscillator;
 }
 
 return {
     oscillator: oscillator,
+    stop: function(oscillator) { oscillator.stop(); },
 };
 }();

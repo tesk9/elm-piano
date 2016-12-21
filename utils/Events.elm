@@ -12,17 +12,8 @@ onKeyDown tagger =
     on "keydown" (map tagger keyCode)
 
 
-{-| `onKeyUp` succeeds when the specified int matches the key that has been released.
+{-| `onKeyUp`
 -}
-onKeyUp : Int -> msg -> Html.Attribute msg
-onKeyUp char msg =
-    on "keyup"
-        (andThen
-            (\key ->
-                if key == char then
-                    succeed msg
-                else
-                    fail ""
-            )
-            keyCode
-        )
+onKeyUp : (Int -> msg) -> Html.Attribute msg
+onKeyUp tagger =
+    on "keyup" (map tagger keyCode)

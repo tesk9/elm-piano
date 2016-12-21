@@ -21,6 +21,7 @@ view model =
         , input
             [ autofocus True
             , onKeyDown Update.Play
+            , onKeyUp Update.Stop
             , id "input"
             ]
             []

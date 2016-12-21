@@ -7,6 +7,7 @@ import WebAudio
 type Msg
     = NoOp
     | Play Int
+    | Stop Int
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd c )
@@ -17,10 +18,30 @@ update msg model =
 
         Play keycode ->
             let
-                _ =
+                newNote =
                     WebAudio.play <| toFrequency keycode
             in
-                model ! []
+                { model
+                    | currentlyPlaying = newNote :: model.currentlyPlaying
+                }
+                    ! []
+
+        Stop keycode ->
+            let
+                perhapsStopPlaying ( ind, stream ) =
+                    --TODO: stop the correct note
+                    if ind == 0 then
+                        WebAudio.stop stream
+                            |> always Nothing
+                    else
+                        Just stream
+
+                newCurrentlyPlaying =
+                    model.currentlyPlaying
+                        |> List.indexedMap (,)
+                        |> List.filterMap perhapsStopPlaying
+            in
+                { model | currentlyPlaying = newCurrentlyPlaying } ! []
 
 
 toFrequency : Int -> Float
