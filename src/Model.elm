@@ -1,16 +1,17 @@
 module Model exposing (..)
 
+import AllDict
 import Flags exposing (Flags)
 import WebAudio
 
 
 type alias Model =
-    { currentlyPlaying : List WebAudio.Stream }
+    { currentlyPlaying : AllDict.AllDict Note WebAudio.Stream Float }
 
 
 init : Flags -> Model
 init flags =
-    { currentlyPlaying = [] }
+    { currentlyPlaying = AllDict.empty toFrequency }
 
 
 type Note

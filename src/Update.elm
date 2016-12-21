@@ -1,5 +1,6 @@
-module Update exposing (update, Msg(..))
+module Update exposing (update, Msg(..), withNote)
 
+import AllDict
 import Model
 import WebAudio
 
@@ -7,7 +8,7 @@ import WebAudio
 type Msg
     = NoOp
     | Play Model.Note
-    | Stop Int
+    | Stop Model.Note
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd c )
@@ -22,23 +23,23 @@ update msg model =
                     WebAudio.play <| Model.toFrequency note
             in
                 { model
-                    | currentlyPlaying = newNote :: model.currentlyPlaying
+                    | currentlyPlaying = AllDict.insert note newNote model.currentlyPlaying
                 }
                     ! []
 
-        Stop keycode ->
+        Stop note ->
             let
-                perhapsStopPlaying ( ind, stream ) =
-                    --TODO: stop the correct note
-                    if ind == 0 then
-                        WebAudio.stop stream
-                            |> always Nothing
-                    else
-                        Just stream
+                _ =
+                    AllDict.get note model.currentlyPlaying
+                        |> Maybe.map WebAudio.stop
 
                 newCurrentlyPlaying =
-                    model.currentlyPlaying
-                        |> List.indexedMap (,)
-                        |> List.filterMap perhapsStopPlaying
+                    AllDict.remove note model.currentlyPlaying
             in
                 { model | currentlyPlaying = newCurrentlyPlaying } ! []
+
+
+withNote : (Model.Note -> Msg) -> Int -> Msg
+withNote msg keycode =
+    Maybe.map msg (Model.toNote keycode)
+        |> Maybe.withDefault NoOp
