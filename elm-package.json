@@ -7,6 +7,7 @@
         "src",
         "utils"
     ],
+    "native-modules": true,
     "exposed-modules": [],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",

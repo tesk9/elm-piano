@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.CssHelpers
 import Model exposing (Model)
 import Styles exposing (..)
+import WebAudio
 
 
 view : Model -> Html b
