@@ -20,7 +20,11 @@ view model =
             [ text "Play input" ]
         , input
             [ autofocus True
-            , onKeyDown Update.Play
+            , onKeyDown
+                (\keycode ->
+                    Maybe.map Update.Play (Model.toNote keycode)
+                        |> Maybe.withDefault Update.NoOp
+                )
             , onKeyUp Update.Stop
             , id "input"
             ]

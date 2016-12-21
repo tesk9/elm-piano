@@ -6,7 +6,7 @@ import WebAudio
 
 type Msg
     = NoOp
-    | Play Int
+    | Play Model.Note
     | Stop Int
 
 
@@ -16,10 +16,10 @@ update msg model =
         NoOp ->
             model ! []
 
-        Play keycode ->
+        Play note ->
             let
                 newNote =
-                    WebAudio.play <| toFrequency keycode
+                    WebAudio.play <| Model.toFrequency note
             in
                 { model
                     | currentlyPlaying = newNote :: model.currentlyPlaying
@@ -42,38 +42,3 @@ update msg model =
                         |> List.filterMap perhapsStopPlaying
             in
                 { model | currentlyPlaying = newCurrentlyPlaying } ! []
-
-
-toFrequency : Int -> Float
-toFrequency keycode =
-    case keycode of
-        65 ->
-            {- a -}
-            220
-
-        66 ->
-            {- b -}
-            246.942
-
-        67 ->
-            {- c -}
-            261.626
-
-        68 ->
-            {- d -}
-            293.665
-
-        69 ->
-            {- e -}
-            329.228
-
-        70 ->
-            {- f -}
-            349.228
-
-        71 ->
-            {- g -}
-            391.995
-
-        _ ->
-            0
