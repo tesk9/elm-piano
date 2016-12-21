@@ -4,6 +4,7 @@ import Html
 import Json.Decode exposing (Value, decodeString)
 import Flags exposing (decoder)
 import Model exposing (Model)
+import Time
 import Update exposing (update)
 import View exposing (view)
 
@@ -28,6 +29,6 @@ init pageData =
             Debug.crash err
 
 
-subscriptions : a -> Sub b
+subscriptions : a -> Sub Update.Msg
 subscriptions =
-    always Sub.none
+    always (Time.every Time.millisecond Update.Tick)

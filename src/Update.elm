@@ -2,6 +2,7 @@ module Update exposing (update, Msg(..), withNote)
 
 import AllDict
 import Model
+import Time
 import WebAudio
 
 
@@ -9,6 +10,8 @@ type Msg
     = NoOp
     | Play Model.Note
     | Stop Model.Note
+    | Debounce Msg
+    | Tick Time.Time
 
 
 update : Msg -> Model.Model -> ( Model.Model, Cmd c )
@@ -37,6 +40,21 @@ update msg model =
                     AllDict.remove note model.currentlyPlaying
             in
                 { model | currentlyPlaying = newCurrentlyPlaying } ! []
+
+        Debounce msg ->
+            let
+                perhapsUpdate lastTime =
+                    if model.time - lastTime > 10 then
+                        update msg model
+                    else
+                        model ! []
+            in
+                model.debouncer
+                    |> Maybe.map perhapsUpdate
+                    |> Maybe.withDefault (update msg model)
+
+        Tick time ->
+            { model | time = time } ! []
 
 
 withNote : (Model.Note -> Msg) -> Int -> Msg
