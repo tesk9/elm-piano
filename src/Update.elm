@@ -22,11 +22,15 @@ update msg model =
 
         Play note ->
             let
-                newNote =
-                    WebAudio.play <| Model.toFrequency note
+                newCurrentlyPlaying =
+                    if not <| AllDict.member note model.currentlyPlaying then
+                        model.currentlyPlaying
+                            |> AllDict.insert note (WebAudio.play <| Model.toFrequency note)
+                    else
+                        model.currentlyPlaying
             in
                 { model
-                    | currentlyPlaying = AllDict.insert note newNote model.currentlyPlaying
+                    | currentlyPlaying = newCurrentlyPlaying
                 }
                     ! []
 
