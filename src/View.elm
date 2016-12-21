@@ -1,16 +1,27 @@
 module View exposing (view)
 
+import Events exposing (..)
 import Html exposing (..)
+import Html.Attributes exposing (autofocus)
 import Html.CssHelpers
 import Model exposing (Model)
 import Styles exposing (..)
-import WebAudio
+import Update exposing (Msg(..))
 
 
-view : Model -> Html b
+view : Model -> Html Msg
 view model =
     div
-        [ class [ Container ] ]
+        [ class [ Container ]
+        ]
         [ Html.CssHelpers.style css
-        , text "Hello, world!"
+        , label
+            [ for "input" ]
+            [ text "Play input" ]
+        , input
+            [ autofocus True
+            , onKeyDown Update.Play
+            , id "input"
+            ]
+            []
         ]

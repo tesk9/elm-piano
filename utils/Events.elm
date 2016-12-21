@@ -5,14 +5,11 @@ import Html.Events exposing (..)
 import Json.Decode exposing (..)
 
 
-{-| `onKeyDown` always succeeds, and passes the relevant key's code on.
+{-| `onKeyDown`
 -}
 onKeyDown : (Int -> msg) -> Html.Attribute msg
-onKeyDown msg =
-    on "keyup"
-        (andThen (\k -> succeed (msg k))
-            keyCode
-        )
+onKeyDown tagger =
+    on "keydown" (map tagger keyCode)
 
 
 {-| `onKeyUp` succeeds when the specified int matches the key that has been released.
