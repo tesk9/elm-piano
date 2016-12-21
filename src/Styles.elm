@@ -18,12 +18,22 @@ import Html.CssHelpers exposing (Namespace, withNamespace)
 
 type Classes
     = Container
+    | Piano
+    | Key
 
 
 snippets : List Snippet
 snippets =
     [ (.) Container
         []
+    , (.) Piano
+        [ displayFlex ]
+    , (.) Key
+        [ height (px 200)
+        , width (px 20)
+        , backgroundColor (hex "#fffff0")
+        , border3 (px 1) solid (hex "#4A4A4A")
+        ]
     ]
 
 

@@ -21,6 +21,11 @@ init flags =
     }
 
 
+notes : List Note
+notes =
+    [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA, NextA ]
+
+
 type Note
     = A
     | AB

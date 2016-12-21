@@ -15,6 +15,7 @@ view model =
         [ class [ Container ]
         ]
         [ Html.CssHelpers.style css
+        , viewPiano
         , label
             [ for "input" ]
             [ text "Play input" ]
@@ -26,3 +27,14 @@ view model =
             ]
             []
         ]
+
+
+viewPiano : Html Msg
+viewPiano =
+    div [ class [ Piano ] ] (List.map viewKey Model.notes)
+
+
+viewKey : Model.Note -> Html Msg
+viewKey note =
+    div [ class [ Key ] ]
+        [ text (toString note) ]
