@@ -159,3 +159,12 @@ toFrequency note =
         NextA ->
             {- a -}
             440
+
+
+isNonNatural : Int -> Bool
+isNonNatural noteInd =
+    let
+        position =
+            noteInd % 7
+    in
+        position == 1 || position == 4 || position == 6

@@ -20,6 +20,7 @@ type Classes
     = Container
     | Piano
     | Key
+    | NonNatural
 
 
 snippets : List Snippet
@@ -27,12 +28,20 @@ snippets =
     [ (.) Container
         []
     , (.) Piano
-        [ displayFlex ]
+        [ displayFlex
+        , position relative
+        ]
     , (.) Key
         [ height (px 200)
         , width (px 20)
         , backgroundColor (hex "#fffff0")
         , border3 (px 1) solid (hex "#4A4A4A")
+        ]
+    , (.) NonNatural
+        [ height (px 150)
+        , width (px 15)
+        , backgroundColor (hex "#000000")
+        , position relative
         ]
     ]
 

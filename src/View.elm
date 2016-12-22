@@ -31,10 +31,12 @@ view model =
 
 viewPiano : Html Msg
 viewPiano =
-    div [ class [ Piano ] ] (List.map viewKey Model.notes)
+    div [ class [ Piano ] ] (List.indexedMap viewKey Model.notes)
 
 
-viewKey : Model.Note -> Html Msg
-viewKey note =
-    div [ class [ Key ] ]
-        [ text (toString note) ]
+viewKey : Int -> Model.Note -> Html Msg
+viewKey noteInd note =
+    div [ classList [ ( Key, True ), ( NonNatural, Model.isNonNatural noteInd ) ] ]
+        [ text (toString note)
+        , text (toString noteInd)
+        ]
