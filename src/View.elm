@@ -4,6 +4,7 @@ import Events exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (autofocus)
 import Html.CssHelpers
+import Html.Events exposing (onMouseDown, onMouseUp)
 import Model exposing (Model)
 import Styles exposing (..)
 import Update exposing (Msg(..))
@@ -36,7 +37,11 @@ viewPiano =
 
 viewKey : Int -> Model.Note -> Html Msg
 viewKey noteInd note =
-    div [ classList [ ( Key, True ), ( NonNatural, Model.isNonNatural noteInd ) ] ]
+    div
+        [ classList [ ( Key, True ), ( NonNatural, Model.isNonNatural noteInd ) ]
+        , onMouseDown (Update.Play note)
+        , onMouseUp (Update.Stop note)
+        ]
         [ text (toString note)
         , text (toString noteInd)
         ]
