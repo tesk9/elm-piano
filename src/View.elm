@@ -45,12 +45,10 @@ viewKey noteInd note =
             Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
                 |> Maybe.withDefault 0
     in
-        div
+        button
             [ classList [ ( Key, True ), ( NonNatural, maybeNonNatural /= Nothing ) ]
             , style [ ( "left", toString leftPosition ++ "px" ) ]
             , onMouseDown (Update.Play note)
             , onMouseUp (Update.Stop note)
             ]
-            [ text (toString note)
-            , text (toString noteInd)
-            ]
+            []

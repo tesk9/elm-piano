@@ -34,20 +34,39 @@ snippets =
     , (.) Piano
         [ displayFlex
         , position relative
+        , border3 (px 1) solid (hex "#4A4A4A")
+        , width (px 162)
         ]
     , (.) Key
         [ height (px 200)
         , width (px 20)
-        , backgroundColor (hex "#fffff0")
         , border3 (px 1) solid (hex "#4A4A4A")
+        , borderTopWidth (px 0)
+        , backgroundColor (hex "#fffff0")
+        , keyHover (hex "#fffef0")
         ]
     , (.) NonNatural
-        [ height (px 150)
+        [ height (px 140)
         , width (px 15)
-        , backgroundColor (hex "#000000")
         , position absolute
+        , backgroundColor (hex "#2A1E1B")
+        , keyHover (hex "#000000")
         ]
     ]
+
+
+keyHover : ColorValue compatible -> Mixin
+keyHover color =
+    mixin
+        [ hover
+            [ backgroundColor color
+            , property "border-image" ("linear-gradient(to top, " ++ color.value ++ ", #4A4A4A) 1 100%")
+            , cursor pointer
+            ]
+        , focus
+            [ outline none
+            ]
+        ]
 
 
 { class, classList } =
