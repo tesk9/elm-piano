@@ -164,16 +164,16 @@ toFrequency note =
 getNonNaturalIndex : Int -> Maybe Float
 getNonNaturalIndex noteInd =
     let
-        scale =
-            (floor (toFloat noteInd / 8) * 4)
-                + ((noteInd + 1) % 8)
-                |> toFloat
+        halfOctave =
+            toFloat noteInd / 5 |> floor
+
+        position =
+            noteInd % 5
     in
-        if (noteInd % 8 == 0) then
-            Just <| scale
-        else if ((noteInd - 3) % 8 == 0) then
-            Just <| scale - 1
-        else if (noteInd + 1) % 6 == 0 then
-            Just <| scale - 2
-        else
-            Nothing
+        Maybe.map toFloat <|
+            if position == 1 then
+                Just <| (halfOctave * 3) + 1
+            else if position == 4 then
+                Just <| (halfOctave * 3) + 3
+            else
+                Nothing
