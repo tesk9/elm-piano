@@ -44,7 +44,7 @@ snippets =
         , border3 (px 1) solid (hex "#4A4A4A")
         , borderTopWidth (px 0)
         , backgroundColor (hex "#fffff0")
-        , hover [ keyEmphasis (hex "#fffef0") ]
+        , hover [ keyEmphasis (hex "#FFDAB9") ]
         , withClass CurrentlyPlaying [ keyEmphasis (hex "#fffef0") ]
         , focus [ outline none ]
         ]
@@ -53,7 +53,7 @@ snippets =
         , width (px 15)
         , position absolute
         , backgroundColor (hex "#2A1E1B")
-        , hover [ keyEmphasis (hex "#000000") ]
+        , hover [ keyEmphasis (hex "#400000") ]
         , withClass CurrentlyPlaying [ keyEmphasis (hex "#000000") ]
         ]
     ]
