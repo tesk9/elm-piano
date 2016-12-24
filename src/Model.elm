@@ -16,7 +16,7 @@ type alias Model =
 
 init : Flags -> Model
 init flags =
-    { currentlyPlaying = AllDict.empty toFrequency
+    { currentlyPlaying = AllDict.empty (toFrequency 4)
     , octave = 4
     , time = 0
     , debouncer = Nothing
@@ -25,7 +25,7 @@ init flags =
 
 notes : List Note
 notes =
-    [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA, NextA ]
+    [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA ]
 
 
 type alias Octave =
@@ -35,6 +35,9 @@ type alias Octave =
 toOctave : Int -> Maybe Octave
 toOctave keycode =
     case keycode of
+        488 ->
+            Just 0
+
         49 ->
             Just 1
 
@@ -79,7 +82,6 @@ type Note
     | FG
     | G
     | GA
-    | NextA
 
 
 toNote : Int -> Maybe Note
@@ -139,66 +141,63 @@ toNote keycode =
 
         186 ->
             {- ; -}
-            Just NextA
+            Just A
 
         _ ->
             Nothing
 
 
-toFrequency : Note -> Float
-toFrequency note =
-    case note of
-        A ->
-            {- a -}
-            220
+toFrequency : Octave -> Note -> Float
+toFrequency octave note =
+    (*) (toFloat (2 ^ octave)) <|
+        case note of
+            A ->
+                {- a -}
+                27.5
 
-        AB ->
-            {- a#, bb -}
-            233.082
+            AB ->
+                {- a#, bb -}
+                29.135
 
-        B ->
-            {- b -}
-            246.942
+            B ->
+                {- b -}
+                30.868
 
-        C ->
-            {- c -}
-            261.626
+            C ->
+                {- c -}
+                16.351
 
-        CD ->
-            {- c#, db -}
-            277.183
+            CD ->
+                {- c#, db -}
+                17.324
 
-        D ->
-            {- d -}
-            293.665
+            D ->
+                {- d -}
+                18.354
 
-        DE ->
-            {- d#, eb -}
-            311.127
+            DE ->
+                {- d#, eb -}
+                19.445
 
-        E ->
-            {- e -}
-            329.228
+            E ->
+                {- e -}
+                20.601
 
-        F ->
-            {- f -}
-            349.228
+            F ->
+                {- f -}
+                21.827
 
-        FG ->
-            {- f#, gb -}
-            369.994
+            FG ->
+                {- f#, gb -}
+                23.124
 
-        G ->
-            {- g -}
-            391.995
+            G ->
+                {- g -}
+                24.499
 
-        GA ->
-            {- g#, ab -}
-            415.305
-
-        NextA ->
-            {- a -}
-            440
+            GA ->
+                {- g#, ab -}
+                25.956
 
 
 getNonNaturalIndex : Int -> Maybe Float

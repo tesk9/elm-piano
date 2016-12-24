@@ -31,6 +31,9 @@ view model =
         , br [] []
         , h4 [] [ text "Playing:" ]
         , viewPlayingNotes model.currentlyPlaying
+        , br [] []
+        , h4 [] [ text "Octave:" ]
+        , viewOctave model.octave
         ]
 
 
@@ -69,3 +72,8 @@ viewPlayingNotes currentlyPlaying =
         |> AllDict.keys
         |> List.map (\n -> div [] [ text (toString n) ])
         |> div []
+
+
+viewOctave : Model.Octave -> Html Msg
+viewOctave octave =
+    div [] [ text (toString octave) ]

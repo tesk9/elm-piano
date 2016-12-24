@@ -8,6 +8,7 @@ import WebAudio
 
 type Msg
     = NoOp
+    | ChangeOctave Model.Octave
     | Play Model.Note
     | Stop Model.Note
     | Debounce Msg
@@ -19,6 +20,9 @@ update msg model =
     case msg of
         NoOp ->
             model ! []
+
+        ChangeOctave octave ->
+            { model | octave = octave } ! []
 
         Play note ->
             let
