@@ -28,6 +28,9 @@ view model =
             , id "input"
             ]
             []
+        , br [] []
+        , h4 [] [ text "Playing:" ]
+        , viewPlayingNotes model.currentlyPlaying
         ]
 
 
@@ -57,3 +60,11 @@ viewKey currentlyPlaying noteInd note =
             , onMouseUp (Update.Stop note)
             ]
             []
+
+
+viewPlayingNotes : AllDict.AllDict Model.Note a Float -> Html Msg
+viewPlayingNotes currentlyPlaying =
+    currentlyPlaying
+        |> AllDict.keys
+        |> List.map (\n -> div [] [ text (toString n) ])
+        |> div []
