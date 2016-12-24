@@ -204,15 +204,15 @@ getNonNaturalIndex : Int -> Maybe Float
 getNonNaturalIndex noteInd =
     let
         halfOctave =
-            toFloat noteInd / 5 |> floor
+            toFloat noteInd * 3 / 5 |> floor
 
         position =
             noteInd % 5
     in
         Maybe.map toFloat <|
             if position == 1 then
-                Just <| (halfOctave * 3) + 1
+                Just <| halfOctave + 1
             else if position == 4 then
-                Just <| (halfOctave * 3) + 3
+                Just <| halfOctave + 3
             else
                 Nothing
