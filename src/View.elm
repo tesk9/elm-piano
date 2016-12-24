@@ -5,7 +5,7 @@ import Events exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
-import Html.Events exposing (onMouseDown, onMouseUp)
+import Html.Events exposing (onMouseDown, onMouseUp, onMouseLeave)
 import Model exposing (Model)
 import Styles exposing (..)
 import Update exposing (Msg(..))
@@ -57,6 +57,7 @@ viewKey currentlyPlaying noteInd note =
                 ]
             , style [ ( "left", toString leftPosition ++ "px" ) ]
             , onMouseDown (Update.Play note)
+            , onMouseLeave (Update.Stop note)
             , onMouseUp (Update.Stop note)
             ]
             []
