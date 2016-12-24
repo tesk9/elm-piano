@@ -23,7 +23,7 @@ view model =
             [ text "Play input" ]
         , input
             [ autofocus True
-            , onKeyDown (Update.withNote (Update.Debounce << Update.Play))
+            , onKeyDown (Update.Debounce << Update.HandleKeyDown)
             , onKeyUp (Update.withNote Update.Stop)
             , id "input"
             ]

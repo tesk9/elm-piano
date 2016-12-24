@@ -8,7 +8,7 @@ import WebAudio
 
 type Msg
     = NoOp
-    | ChangeOctave Model.Octave
+    | HandleKeyDown Int
     | Play Model.Note
     | Stop Model.Note
     | Debounce Msg
@@ -21,8 +21,12 @@ update msg model =
         NoOp ->
             model ! []
 
-        ChangeOctave octave ->
-            { model | octave = octave } ! []
+        HandleKeyDown keycode ->
+            (model
+                |> perhapsPlay keycode
+                |> perhapsChangeOctave keycode
+            )
+                ! []
 
         Play note ->
             play note model ! []
@@ -43,18 +47,29 @@ withNote msg keycode =
         |> Maybe.withDefault NoOp
 
 
+perhapsChangeOctave : Int -> Model.Model -> Model.Model
+perhapsChangeOctave keycode model =
+    Model.toOctave keycode
+        |> Maybe.map (\newOctave -> { model | octave = newOctave })
+        |> Maybe.withDefault model
+
+
+perhapsPlay : Int -> Model.Model -> Model.Model
+perhapsPlay keycode model =
+    Model.toNote keycode
+        |> Maybe.map ((flip play) model)
+        |> Maybe.withDefault model
+
+
 play : Model.Note -> Model.Model -> Model.Model
 play note model =
     let
-        playingNote =
-            note
-                |> Model.toFrequency model.octave
-                |> WebAudio.play
+        frequency =
+            WebAudio.play (Model.toFrequency model.octave note)
 
         newCurrentlyPlaying =
             if not <| AllDict.member note model.currentlyPlaying then
-                model.currentlyPlaying
-                    |> AllDict.insert note playingNote
+                AllDict.insert note frequency model.currentlyPlaying
             else
                 model.currentlyPlaying
     in
