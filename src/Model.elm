@@ -8,6 +8,7 @@ import WebAudio
 
 type alias Model =
     { currentlyPlaying : AllDict.AllDict Note WebAudio.Stream Float
+    , octave : Octave
     , time : Time.Time
     , debouncer : Maybe Time.Time
     }
@@ -16,6 +17,7 @@ type alias Model =
 init : Flags -> Model
 init flags =
     { currentlyPlaying = AllDict.empty toFrequency
+    , octave = 4
     , time = 0
     , debouncer = Nothing
     }
@@ -24,6 +26,44 @@ init flags =
 notes : List Note
 notes =
     [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA, NextA ]
+
+
+type alias Octave =
+    Int
+
+
+toOctave : Int -> Maybe Octave
+toOctave keycode =
+    case keycode of
+        49 ->
+            Just 1
+
+        50 ->
+            Just 2
+
+        51 ->
+            Just 3
+
+        52 ->
+            Just 4
+
+        53 ->
+            Just 5
+
+        54 ->
+            Just 6
+
+        55 ->
+            Just 7
+
+        56 ->
+            Just 8
+
+        57 ->
+            Just 9
+
+        _ ->
+            Nothing
 
 
 type Note
