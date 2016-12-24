@@ -1,5 +1,6 @@
 module View exposing (view)
 
+import AllDict
 import Events exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
@@ -16,7 +17,7 @@ view model =
         [ class [ Container ]
         ]
         [ Html.CssHelpers.style css
-        , viewPiano
+        , viewPiano model.currentlyPlaying
         , label
             [ for "input" ]
             [ text "Play input" ]
@@ -30,13 +31,13 @@ view model =
         ]
 
 
-viewPiano : Html Msg
-viewPiano =
-    div [ class [ Piano ] ] (List.indexedMap viewKey Model.notes)
+viewPiano : AllDict.AllDict Model.Note a Float -> Html Msg
+viewPiano currentlyPlaying =
+    div [ class [ Piano ] ] (List.indexedMap (viewKey currentlyPlaying) Model.notes)
 
 
-viewKey : Int -> Model.Note -> Html Msg
-viewKey noteInd note =
+viewKey : AllDict.AllDict Model.Note a Float -> Int -> Model.Note -> Html Msg
+viewKey currentlyPlaying noteInd note =
     let
         maybeNonNatural =
             Model.getNonNaturalIndex noteInd
@@ -46,7 +47,11 @@ viewKey noteInd note =
                 |> Maybe.withDefault 0
     in
         button
-            [ classList [ ( Key, True ), ( NonNatural, maybeNonNatural /= Nothing ) ]
+            [ classList
+                [ ( Key, True )
+                , ( NonNatural, maybeNonNatural /= Nothing )
+                , ( CurrentlyPlaying, AllDict.member note currentlyPlaying )
+                ]
             , style [ ( "left", toString leftPosition ++ "px" ) ]
             , onMouseDown (Update.Play note)
             , onMouseUp (Update.Stop note)

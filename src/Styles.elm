@@ -21,6 +21,7 @@ type Classes
     | Piano
     | Key
     | NonNatural
+    | CurrentlyPlaying
 
 
 snippets : List Snippet
@@ -43,29 +44,27 @@ snippets =
         , border3 (px 1) solid (hex "#4A4A4A")
         , borderTopWidth (px 0)
         , backgroundColor (hex "#fffff0")
-        , keyHover (hex "#fffef0")
+        , hover [ keyEmphasis (hex "#fffef0") ]
+        , withClass CurrentlyPlaying [ keyEmphasis (hex "#fffef0") ]
+        , focus [ outline none ]
         ]
     , (.) NonNatural
         [ height (px 140)
         , width (px 15)
         , position absolute
         , backgroundColor (hex "#2A1E1B")
-        , keyHover (hex "#000000")
+        , hover [ keyEmphasis (hex "#000000") ]
+        , withClass CurrentlyPlaying [ keyEmphasis (hex "#000000") ]
         ]
     ]
 
 
-keyHover : ColorValue compatible -> Mixin
-keyHover color =
+keyEmphasis : ColorValue compatible -> Mixin
+keyEmphasis color =
     mixin
-        [ hover
-            [ backgroundColor color
-            , property "border-image" ("linear-gradient(to top, " ++ color.value ++ ", #4A4A4A) 1 100%")
-            , cursor pointer
-            ]
-        , focus
-            [ outline none
-            ]
+        [ backgroundColor color
+        , property "border-image" ("linear-gradient(to top, " ++ color.value ++ ", #4A4A4A) 1 100%")
+        , cursor pointer
         ]
 
 
