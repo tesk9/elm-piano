@@ -161,10 +161,19 @@ toFrequency note =
             440
 
 
-isNonNatural : Int -> Bool
-isNonNatural noteInd =
+getNonNaturalIndex : Int -> Maybe Float
+getNonNaturalIndex noteInd =
     let
-        position =
-            noteInd % 7
+        scale =
+            (floor (toFloat noteInd / 8) * 4)
+                + ((noteInd + 1) % 8)
+                |> toFloat
     in
-        position == 1 || position == 4 || position == 6
+        if (noteInd % 8 == 0) then
+            Just <| scale
+        else if ((noteInd - 3) % 8 == 0) then
+            Just <| scale - 1
+        else if (noteInd + 1) % 6 == 0 then
+            Just <| scale - 2
+        else
+            Nothing

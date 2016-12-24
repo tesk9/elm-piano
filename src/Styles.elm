@@ -26,7 +26,11 @@ type Classes
 snippets : List Snippet
 snippets =
     [ (.) Container
-        []
+        [ descendants
+            [ everything
+                [ boxSizing borderBox ]
+            ]
+        ]
     , (.) Piano
         [ displayFlex
         , position relative
@@ -41,7 +45,7 @@ snippets =
         [ height (px 150)
         , width (px 15)
         , backgroundColor (hex "#000000")
-        , position relative
+        , position absolute
         ]
     ]
 

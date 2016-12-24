@@ -2,7 +2,7 @@ module View exposing (view)
 
 import Events exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (autofocus)
+import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
 import Html.Events exposing (onMouseDown, onMouseUp)
 import Model exposing (Model)
@@ -37,11 +37,20 @@ viewPiano =
 
 viewKey : Int -> Model.Note -> Html Msg
 viewKey noteInd note =
-    div
-        [ classList [ ( Key, True ), ( NonNatural, Model.isNonNatural noteInd ) ]
-        , onMouseDown (Update.Play note)
-        , onMouseUp (Update.Stop note)
-        ]
-        [ text (toString note)
-        , text (toString noteInd)
-        ]
+    let
+        maybeNonNatural =
+            Model.getNonNaturalIndex noteInd
+
+        leftPosition =
+            Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
+                |> Maybe.withDefault 0
+    in
+        div
+            [ classList [ ( Key, True ), ( NonNatural, maybeNonNatural /= Nothing ) ]
+            , style [ ( "left", toString leftPosition ++ "px" ) ]
+            , onMouseDown (Update.Play note)
+            , onMouseUp (Update.Stop note)
+            ]
+            [ text (toString note)
+            , text (toString noteInd)
+            ]
