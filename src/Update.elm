@@ -64,12 +64,10 @@ perhapsPlay keycode model =
 play : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
 play noteWithOctave model =
     let
-        frequency =
-            WebAudio.play (Model.toFrequency noteWithOctave)
-
         newCurrentlyPlaying =
             if not <| AllDict.member noteWithOctave model.currentlyPlaying then
-                AllDict.insert noteWithOctave frequency model.currentlyPlaying
+                WebAudio.play (Model.toFrequency noteWithOctave)
+                    |> (flip (AllDict.insert noteWithOctave)) model.currentlyPlaying
             else
                 model.currentlyPlaying
     in
