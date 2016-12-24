@@ -200,19 +200,20 @@ toFrequency ( octave, note ) =
                 51.913
 
 
-getNonNaturalIndex : Int -> Maybe Float
-getNonNaturalIndex noteInd =
+getNonNaturalIndex : Octave -> Int -> Maybe Float
+getNonNaturalIndex octave noteInd =
     let
-        halfOctave =
-            toFloat noteInd * 3 / 5 |> floor
+        leftPositioning =
+            (toFloat noteInd * 3 / 5)
+                |> floor
+                |> (+) 1
+                |> (+) (octave * 7)
 
         position =
             noteInd % 5
     in
         Maybe.map toFloat <|
-            if position == 1 then
-                Just <| halfOctave + 1
-            else if position == 4 then
-                Just <| halfOctave + 3
+            if position == 1 || position == 4 then
+                Just leftPositioning
             else
                 Nothing

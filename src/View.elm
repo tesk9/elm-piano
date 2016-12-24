@@ -50,7 +50,7 @@ viewKey : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Int -> ( Model
 viewKey currentlyPlaying noteInd noteWithOctave =
     let
         maybeNonNatural =
-            Model.getNonNaturalIndex noteInd
+            Model.getNonNaturalIndex (Tuple.first noteWithOctave) noteInd
 
         leftPosition =
             Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
