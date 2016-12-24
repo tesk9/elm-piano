@@ -36,7 +36,7 @@ snippets =
         [ displayFlex
         , position relative
         , border3 (px 1) solid (hex "#4A4A4A")
-        , width (px 162)
+        , width (px <| 20 * 7 * 7 + 2)
         ]
     , (.) Key
         [ height (px 200)

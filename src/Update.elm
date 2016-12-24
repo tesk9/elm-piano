@@ -9,8 +9,8 @@ import WebAudio
 type Msg
     = NoOp
     | HandleKeyDown Int
-    | Play Model.Note
-    | Stop Model.Note
+    | Play ( Model.Octave, Model.Note )
+    | Stop ( Model.Octave, Model.Note )
     | Debounce Msg
     | Tick Time.Time
 
@@ -28,11 +28,11 @@ update msg model =
             )
                 ! []
 
-        Play note ->
-            play note model ! []
+        Play noteWithOctave ->
+            play noteWithOctave model ! []
 
-        Stop note ->
-            stop note model ! []
+        Stop noteWithOctave ->
+            stop noteWithOctave model ! []
 
         Debounce msg ->
             debounce msg model
@@ -57,34 +57,34 @@ perhapsChangeOctave keycode model =
 perhapsPlay : Int -> Model.Model -> Model.Model
 perhapsPlay keycode model =
     Model.toNote keycode
-        |> Maybe.map ((flip play) model)
+        |> Maybe.map (\note -> play ( model.octave, note ) model)
         |> Maybe.withDefault model
 
 
-play : Model.Note -> Model.Model -> Model.Model
-play note model =
+play : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
+play noteWithOctave model =
     let
         frequency =
-            WebAudio.play (Model.toFrequency model.octave note)
+            WebAudio.play (Model.toFrequency noteWithOctave)
 
         newCurrentlyPlaying =
-            if not <| AllDict.member note model.currentlyPlaying then
-                AllDict.insert note frequency model.currentlyPlaying
+            if not <| AllDict.member noteWithOctave model.currentlyPlaying then
+                AllDict.insert noteWithOctave frequency model.currentlyPlaying
             else
                 model.currentlyPlaying
     in
         { model | currentlyPlaying = newCurrentlyPlaying }
 
 
-stop : Model.Note -> Model.Model -> Model.Model
-stop note model =
+stop : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
+stop noteWithOctave model =
     let
         _ =
-            AllDict.get note model.currentlyPlaying
+            AllDict.get noteWithOctave model.currentlyPlaying
                 |> Maybe.map WebAudio.stop
 
         newCurrentlyPlaying =
-            AllDict.remove note model.currentlyPlaying
+            AllDict.remove noteWithOctave model.currentlyPlaying
     in
         { model | currentlyPlaying = newCurrentlyPlaying }
 
@@ -93,7 +93,7 @@ debounce : Msg -> Model.Model -> ( Model.Model, Cmd c )
 debounce msg model =
     let
         perhapsUpdate lastTime =
-            if model.time - lastTime > 10 then
+            if model.time - lastTime > 20 then
                 update msg model
             else
                 model ! []

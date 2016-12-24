@@ -24,26 +24,30 @@ view model =
         , input
             [ autofocus True
             , onKeyDown (Update.Debounce << Update.HandleKeyDown)
-            , onKeyUp (Update.withNote Update.Stop)
+            , onKeyUp (Update.withNote (\note -> Update.Stop ( model.octave, note )))
             , id "input"
             ]
             []
         , br [] []
         , h4 [] [ text "Playing:" ]
         , viewPlayingNotes model.currentlyPlaying
-        , br [] []
-        , h4 [] [ text "Octave:" ]
-        , viewOctave model.octave
         ]
 
 
-viewPiano : AllDict.AllDict Model.Note a Float -> Html Msg
+viewPiano : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Html Msg
 viewPiano currentlyPlaying =
-    div [ class [ Piano ] ] (List.indexedMap (viewKey currentlyPlaying) Model.notes)
+    div [ class [ Piano ] ]
+        (List.repeat 7 () |> List.indexedMap (\index _ -> viewOctave currentlyPlaying index))
 
 
-viewKey : AllDict.AllDict Model.Note a Float -> Int -> Model.Note -> Html Msg
-viewKey currentlyPlaying noteInd note =
+viewOctave : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Html Msg
+viewOctave currentlyPlaying octave =
+    div [] <|
+        List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) Model.notes
+
+
+viewKey : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Int -> ( Model.Octave, Model.Note ) -> Html Msg
+viewKey currentlyPlaying noteInd noteWithOctave =
     let
         maybeNonNatural =
             Model.getNonNaturalIndex noteInd
@@ -56,24 +60,24 @@ viewKey currentlyPlaying noteInd note =
             [ classList
                 [ ( Key, True )
                 , ( NonNatural, maybeNonNatural /= Nothing )
-                , ( CurrentlyPlaying, AllDict.member note currentlyPlaying )
+                , ( CurrentlyPlaying, AllDict.member noteWithOctave currentlyPlaying )
                 ]
             , style [ ( "left", toString leftPosition ++ "px" ) ]
-            , onMouseDown (Update.Play note)
-            , onMouseLeave (Update.Stop note)
-            , onMouseUp (Update.Stop note)
+            , onMouseDown (Update.Play noteWithOctave)
+            , onMouseLeave (Update.Stop noteWithOctave)
+            , onMouseUp (Update.Stop noteWithOctave)
             ]
             []
 
 
-viewPlayingNotes : AllDict.AllDict Model.Note a Float -> Html Msg
+viewPlayingNotes : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Html Msg
 viewPlayingNotes currentlyPlaying =
     currentlyPlaying
         |> AllDict.keys
-        |> List.map (\n -> div [] [ text (toString n) ])
+        |> List.map
+            (\( octave, note ) ->
+                div []
+                    [ text <| "Octave: " ++ toString octave ++ " | " ++ "Note: " ++ toString note
+                    ]
+            )
         |> div []
-
-
-viewOctave : Model.Octave -> Html Msg
-viewOctave octave =
-    div [] [ text (toString octave) ]
