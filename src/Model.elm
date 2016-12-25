@@ -35,35 +35,29 @@ type alias Octave =
 toOctave : Int -> Maybe Octave
 toOctave keycode =
     case keycode of
-        48 ->
+        49 ->
             Just 0
 
-        49 ->
+        50 ->
             Just 1
 
-        50 ->
+        51 ->
             Just 2
 
-        51 ->
+        52 ->
             Just 3
 
-        52 ->
+        53 ->
             Just 4
 
-        53 ->
+        54 ->
             Just 5
 
-        54 ->
+        55 ->
             Just 6
 
-        55 ->
-            Just 7
-
         56 ->
-            Just 8
-
-        57 ->
-            Just 9
+            Just 7
 
         _ ->
             Nothing
