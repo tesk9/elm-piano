@@ -19,6 +19,7 @@ import Html.CssHelpers exposing (Namespace, withNamespace)
 type Classes
     = Container
     | Piano
+    | SelectedOctave
     | Key
     | NonNatural
     | CurrentlyPlaying
@@ -38,6 +39,8 @@ snippets =
         , border3 (px 1) solid (hex "#4A4A4A")
         , width (px <| 20 * 7 * 7 + 2)
         ]
+    , (.) SelectedOctave
+        [ borderBottom3 (px 1) solid (hex "#0000FF") ]
     , (.) Key
         [ height (px 200)
         , width (px 20)

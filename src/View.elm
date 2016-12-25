@@ -17,7 +17,7 @@ view model =
         [ class [ Container ]
         ]
         [ Html.CssHelpers.style css
-        , viewPiano model.currentlyPlaying
+        , viewPiano model.currentlyPlaying model.octave
         , label
             [ for "input" ]
             [ text "Play input" ]
@@ -34,15 +34,15 @@ view model =
         ]
 
 
-viewPiano : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Html Msg
-viewPiano currentlyPlaying =
+viewPiano : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Html Msg
+viewPiano currentlyPlaying selectedOctave =
     div [ class [ Piano ] ]
-        (List.repeat 7 () |> List.indexedMap (\index _ -> viewOctave currentlyPlaying index))
+        (List.repeat 7 () |> List.indexedMap (\index _ -> viewOctave currentlyPlaying selectedOctave index))
 
 
-viewOctave : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Html Msg
-viewOctave currentlyPlaying octave =
-    div [] <|
+viewOctave : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Model.Octave -> Html Msg
+viewOctave currentlyPlaying selectedOctave octave =
+    div [ classList [ ( SelectedOctave, selectedOctave == octave ) ] ] <|
         List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) Model.notes
 
 
