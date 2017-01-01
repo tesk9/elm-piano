@@ -209,39 +209,40 @@ getNonNaturalIndex octave noteInd =
 
 toStaffPosition : ( Octave, Note ) -> Float
 toStaffPosition ( octave, note ) =
-    case note of
-        A ->
-            80
+    (+) (toFloat (octave - 4) * 15) <|
+        case note of
+            A ->
+                80
 
-        AB ->
-            0
+            AB ->
+                0
 
-        B ->
-            82.5
+            B ->
+                82.5
 
-        C ->
-            85
+            C ->
+                85
 
-        CD ->
-            0
+            CD ->
+                0
 
-        D ->
-            87.5
+            D ->
+                87.5
 
-        DE ->
-            0
+            DE ->
+                0
 
-        E ->
-            90
+            E ->
+                90
 
-        F ->
-            92.5
+            F ->
+                92.5
 
-        FG ->
-            0
+            FG ->
+                0
 
-        G ->
-            95
+            G ->
+                95
 
-        GA ->
-            0
+            GA ->
+                0
