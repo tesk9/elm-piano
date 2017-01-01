@@ -62,6 +62,12 @@ snippets =
         , hover [ keyEmphasis (hex "#400000") ]
         , withClass CurrentlyPlaying [ keyEmphasis (hex "#000000") ]
         ]
+    , (.) Staff
+        [ backgroundImage (url "./assets/piano_staff.png")
+        , backgroundRepeat noRepeat
+        , height (px 120)
+        , position relative
+        ]
     ]
 
 
