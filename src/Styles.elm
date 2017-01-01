@@ -66,6 +66,7 @@ snippets =
         [ backgroundImage (url "./assets/piano_staff.png")
         , backgroundRepeat noRepeat
         , height (px 120)
+        , width (px 535)
         , paddingLeft (px 80)
         ]
     , (.) Chord
