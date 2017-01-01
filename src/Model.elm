@@ -111,33 +111,25 @@ toNote keycode =
             {- t -}
             Just DE
 
+        71 ->
+            {- g -}
+            Just E
+
+        72 ->
+            {- h -}
+            Just F
+
         85 ->
             {- u -}
-            Just DE
+            Just FG
 
         74 ->
             {- j -}
-            Just E
-
-        75 ->
-            {- k -}
-            Just F
-
-        79 ->
-            {- o -}
-            Just FG
-
-        76 ->
-            {- l -}
             Just G
 
-        80 ->
-            {- p -}
+        73 ->
+            {- i -}
             Just GA
-
-        186 ->
-            {- ; -}
-            Just A
 
         _ ->
             Nothing
