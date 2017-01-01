@@ -66,7 +66,21 @@ snippets =
         [ backgroundImage (url "./assets/piano_staff.png")
         , backgroundRepeat noRepeat
         , height (px 120)
-        , position relative
+        , paddingLeft (px 80)
+        ]
+    , (.) Chord
+        [ position relative
+        , display inlineBlock
+        , height (pct 100)
+        , width (px 12)
+        ]
+    , (.) Note
+        [ height (px 4)
+        , width (px 5)
+        , backgroundColor (hex "#2A1E1B")
+        , borderRadius (pct 60)
+        , transform (rotate (deg -15))
+        , position absolute
         ]
     ]
 
