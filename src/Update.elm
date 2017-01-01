@@ -77,7 +77,7 @@ play noteWithOctave model =
 stop : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
 stop noteWithOctave model =
     let
-        _ =
+        stoppedNote =
             AllDict.get noteWithOctave model.currentlyPlaying
                 |> Maybe.map WebAudio.stop
 
@@ -86,7 +86,10 @@ stop noteWithOctave model =
     in
         { model
             | currentlyPlaying = newCurrentlyPlaying
-            , played = [ noteWithOctave ] :: model.played
+            , played =
+                stoppedNote
+                    |> Maybe.map (\_ -> [ noteWithOctave ] :: model.played)
+                    |> Maybe.withDefault model.played
         }
 
 
