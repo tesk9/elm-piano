@@ -23,6 +23,9 @@ type Classes
     | Key
     | NonNatural
     | CurrentlyPlaying
+    | Staff
+    | Chord
+    | Note
 
 
 snippets : List Snippet

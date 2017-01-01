@@ -84,7 +84,10 @@ stop noteWithOctave model =
         newCurrentlyPlaying =
             AllDict.remove noteWithOctave model.currentlyPlaying
     in
-        { model | currentlyPlaying = newCurrentlyPlaying }
+        { model
+            | currentlyPlaying = newCurrentlyPlaying
+            , played = [ noteWithOctave ] :: model.played
+        }
 
 
 debounce : Msg -> Model.Model -> ( Model.Model, Cmd c )

@@ -8,6 +8,7 @@ import WebAudio
 
 type alias Model =
     { currentlyPlaying : AllDict.AllDict ( Octave, Note ) WebAudio.Stream Float
+    , played : List (List ( Octave, Note ))
     , octave : Octave
     , time : Time.Time
     , debouncer : Maybe Time.Time
@@ -17,6 +18,7 @@ type alias Model =
 init : Flags -> Model
 init flags =
     { currentlyPlaying = AllDict.empty toFrequency
+    , played = []
     , octave = 4
     , time = 0
     , debouncer = Nothing

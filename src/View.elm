@@ -31,6 +31,8 @@ view model =
         , br [] []
         , h4 [] [ text "Playing:" ]
         , viewPlayingNotes model.currentlyPlaying
+        , h4 [] [ text "Record:" ]
+        , viewPlayedNotes (Debug.log "played" model.played)
         ]
 
 
@@ -81,3 +83,20 @@ viewPlayingNotes currentlyPlaying =
                     ]
             )
         |> div []
+
+
+viewPlayedNotes : List (List ( Model.Octave, Model.Note )) -> Html msg
+viewPlayedNotes played =
+    div [ class [ Staff ] ] <|
+        List.map viewChord played
+
+
+viewChord : List ( Model.Octave, Model.Note ) -> Html msg
+viewChord notes =
+    div [ class [ Chord ] ] <|
+        List.map viewNote notes
+
+
+viewNote : ( Model.Octave, Model.Note ) -> Html msg
+viewNote ( octave, note ) =
+    div [ class [ Note ] ] [ text <| toString note ]
