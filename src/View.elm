@@ -30,7 +30,7 @@ view model =
             []
         , br [] []
         , h4 [] [ text "Record:" ]
-        , viewPlayedNotes (Debug.log "played" model.played)
+        , viewPlayedNotes model.played
         , h4 [] [ text "Playing:" ]
         , viewPlayingNotes model.currentlyPlaying
         ]
