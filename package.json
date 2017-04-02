@@ -1,0 +1,12 @@
+{
+  "name": "elm-piano",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "elm-make src/Main.elm --output elm.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
