@@ -1,7 +1,6 @@
 module View exposing (view)
 
 import AllDict
-import Events exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
@@ -17,9 +16,20 @@ view model =
         [ class [ Container ]
         ]
         [ Html.CssHelpers.style css
+        , h1 [] [ text "Elm Piano" ]
         , viewPiano model.currentlyPlaying model.octave
-        , br [] []
-        , h4 [] [ text "Playing:" ]
+        , h2 [] [ text "Playing the Elm Piano" ]
+        , p [] [ text "Play the piano via point-and-click or via your keyboard." ]
+        , h3 [] [ text "Keyboard interaction:" ]
+        , p []
+            [ text
+                """
+                Your current octave is marked in the interface by a blue line. Change the octave with your number keys.
+                The row of keys (on a QWERTY keyboard) from 'A' through 'J' play the natural notes 'A' through 'G'.
+                Flats & sharps are available (where they exist) one row up.
+            """
+            ]
+        , h4 [] [ text "Currently playing:" ]
         , viewPlayingNotes model.currentlyPlaying
         ]
 
