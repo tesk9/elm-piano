@@ -12,7 +12,6 @@ var setWave = function(osc) {
     imag[1] = 0;
 
     if (audioContext.createPeriodicWave) {
-        console.log("Creating periodic wave")
         var wave = audioContext.createPeriodicWave(real, imag, {disableNormalization: true});
         osc.setPeriodicWave(wave);
     } else {
