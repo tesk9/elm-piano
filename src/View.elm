@@ -18,16 +18,6 @@ view model =
         ]
         [ Html.CssHelpers.style css
         , viewPiano model.currentlyPlaying model.octave
-        , label
-            [ for "input" ]
-            [ text "Play input" ]
-        , input
-            [ autofocus True
-            , onKeyDown (Update.Debounce << Update.HandleKeyDown)
-            , onKeyUp (Update.withNote (\note -> Update.Stop ( model.octave, note )))
-            , id "input"
-            ]
-            []
         , br [] []
         , h4 [] [ text "Playing:" ]
         , viewPlayingNotes model.currentlyPlaying

@@ -1,9 +1,11 @@
 module Main exposing (main)
 
+import Flags exposing (decoder)
 import Html
 import Json.Decode exposing (Value, decodeString)
-import Flags exposing (decoder)
+import Keyboard
 import Model exposing (Model)
+import Platform.Sub as Sub
 import Time
 import Update exposing (update)
 import View exposing (view)
@@ -29,6 +31,10 @@ init pageData =
             Debug.crash err
 
 
-subscriptions : a -> Sub Update.Msg
-subscriptions =
-    always (Time.every Time.millisecond Update.Tick)
+subscriptions : Model -> Sub Update.Msg
+subscriptions model =
+    Sub.batch
+        [ always (Time.every Time.millisecond Update.Tick) model
+        , Keyboard.downs (Update.Debounce << Update.HandleKeyDown)
+        , Keyboard.ups (Update.withNote (\note -> Update.Stop ( model.octave, note )))
+        ]
