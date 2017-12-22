@@ -1,4 +1,4 @@
-module Update exposing (Msg(..), update, withNote)
+port module Update exposing (Msg(..), update, withNote)
 
 import AllDict
 import Model
@@ -29,7 +29,7 @@ update msg model =
                 ! []
 
         Play noteWithOctave ->
-            play noteWithOctave model ! []
+            play noteWithOctave model ! [ playNote (Model.toFrequency noteWithOctave) ]
 
         Stop noteWithOctave ->
             stop noteWithOctave model ! []
@@ -105,3 +105,10 @@ debounce msg model =
     model.debouncer
         |> Maybe.map perhapsUpdate
         |> Maybe.withDefault (update msg model)
+
+
+
+-- PORTS
+
+
+port playNote : Float -> Cmd msg
