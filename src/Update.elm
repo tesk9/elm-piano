@@ -1,4 +1,4 @@
-module Update exposing (update, Msg(..), withNote)
+module Update exposing (Msg(..), update, withNote)
 
 import AllDict
 import Model
@@ -67,11 +67,11 @@ play noteWithOctave model =
         newCurrentlyPlaying =
             if not <| AllDict.member noteWithOctave model.currentlyPlaying then
                 WebAudio.play (Model.toFrequency noteWithOctave)
-                    |> (flip (AllDict.insert noteWithOctave)) model.currentlyPlaying
+                    |> flip (AllDict.insert noteWithOctave) model.currentlyPlaying
             else
                 model.currentlyPlaying
     in
-        { model | currentlyPlaying = newCurrentlyPlaying }
+    { model | currentlyPlaying = newCurrentlyPlaying }
 
 
 stop : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
@@ -84,13 +84,13 @@ stop noteWithOctave model =
         newCurrentlyPlaying =
             AllDict.remove noteWithOctave model.currentlyPlaying
     in
-        { model
-            | currentlyPlaying = newCurrentlyPlaying
-            , played =
-                stoppedNote
-                    |> Maybe.map (\_ -> [ noteWithOctave ] :: model.played)
-                    |> Maybe.withDefault model.played
-        }
+    { model
+        | currentlyPlaying = newCurrentlyPlaying
+        , played =
+            stoppedNote
+                |> Maybe.map (\_ -> [ noteWithOctave ] :: model.played)
+                |> Maybe.withDefault model.played
+    }
 
 
 debounce : Msg -> Model.Model -> ( Model.Model, Cmd c )
@@ -102,6 +102,6 @@ debounce msg model =
             else
                 model ! []
     in
-        model.debouncer
-            |> Maybe.map perhapsUpdate
-            |> Maybe.withDefault (update msg model)
+    model.debouncer
+        |> Maybe.map perhapsUpdate
+        |> Maybe.withDefault (update msg model)

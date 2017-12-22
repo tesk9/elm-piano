@@ -4,7 +4,7 @@ import AllDict
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
-import Html.Events exposing (onMouseDown, onMouseUp, onMouseLeave)
+import Html.Events exposing (onMouseDown, onMouseLeave, onMouseUp)
 import Model exposing (Model)
 import Styles exposing (..)
 import Update exposing (Msg(..))
@@ -56,18 +56,18 @@ viewKey currentlyPlaying noteInd noteWithOctave =
             Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
                 |> Maybe.withDefault 0
     in
-        button
-            [ classList
-                [ ( Key, True )
-                , ( NonNatural, maybeNonNatural /= Nothing )
-                , ( CurrentlyPlaying, AllDict.member noteWithOctave currentlyPlaying )
-                ]
-            , style [ ( "left", toString leftPosition ++ "px" ) ]
-            , onMouseDown (Update.Play noteWithOctave)
-            , onMouseLeave (Update.Stop noteWithOctave)
-            , onMouseUp (Update.Stop noteWithOctave)
+    button
+        [ classList
+            [ ( Key, True )
+            , ( NonNatural, maybeNonNatural /= Nothing )
+            , ( CurrentlyPlaying, AllDict.member noteWithOctave currentlyPlaying )
             ]
-            []
+        , style [ ( "left", toString leftPosition ++ "px" ) ]
+        , onMouseDown (Update.Play noteWithOctave)
+        , onMouseLeave (Update.Stop noteWithOctave)
+        , onMouseUp (Update.Stop noteWithOctave)
+        ]
+        []
 
 
 viewPlayingNotes : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Html Msg

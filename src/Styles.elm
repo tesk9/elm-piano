@@ -1,11 +1,11 @@
 module Styles
     exposing
         ( Classes(..)
-        , css
         , class
-        , id
-        , for
         , classList
+        , css
+        , for
+        , id
         , snippets
         )
 
