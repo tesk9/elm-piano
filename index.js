@@ -1,1 +1,1 @@
-var piano = Elm.Main.fullscreen("{}")
+var piano = Elm.Main.fullscreen()

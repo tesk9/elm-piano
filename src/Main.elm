@@ -1,8 +1,7 @@
 module Main exposing (main)
 
-import Flags exposing (decoder)
+import AllDict
 import Html
-import Json.Decode exposing (Value, decodeString)
 import Keyboard
 import Model exposing (Model)
 import Platform.Sub as Sub
@@ -11,24 +10,22 @@ import Update exposing (update)
 import View exposing (view)
 
 
-main : Program String Model Update.Msg
+main : Program Never Model Update.Msg
 main =
-    Html.programWithFlags
-        { init = init
+    Html.program
+        { init =
+            ( { currentlyPlaying = AllDict.empty Model.toFrequency
+              , played = []
+              , octave = 4
+              , time = 0
+              , debouncer = Nothing
+              }
+            , Cmd.none
+            )
         , update = update
         , subscriptions = subscriptions
         , view = view
         }
-
-
-init : String -> ( Model, Cmd msg )
-init pageData =
-    case decodeString decoder pageData of
-        Ok flags ->
-            Model.init flags ! []
-
-        Err err ->
-            Debug.crash err
 
 
 subscriptions : Model -> Sub Update.Msg

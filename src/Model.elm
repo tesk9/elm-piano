@@ -1,7 +1,6 @@
 module Model exposing (..)
 
 import AllDict
-import Flags exposing (Flags)
 import Time
 import WebAudio
 
@@ -12,16 +11,6 @@ type alias Model =
     , octave : Octave
     , time : Time.Time
     , debouncer : Maybe Time.Time
-    }
-
-
-init : Flags -> Model
-init flags =
-    { currentlyPlaying = AllDict.empty toFrequency
-    , played = []
-    , octave = 4
-    , time = 0
-    , debouncer = Nothing
     }
 
 
