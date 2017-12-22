@@ -32,7 +32,7 @@ update msg model =
             play noteWithOctave model ! [ playNote (Model.toFrequency noteWithOctave) ]
 
         Stop noteWithOctave ->
-            stop noteWithOctave model ! []
+            stop noteWithOctave model ! [ stopNote (Model.toFrequency noteWithOctave) ]
 
         Debounce msg ->
             debounce msg model
@@ -112,3 +112,6 @@ debounce msg model =
 
 
 port playNote : Float -> Cmd msg
+
+
+port stopNote : Float -> Cmd msg
