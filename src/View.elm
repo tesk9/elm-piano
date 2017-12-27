@@ -1,11 +1,12 @@
 module View exposing (view)
 
-import AllDict
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
 import Html.Events exposing (onMouseDown, onMouseLeave, onMouseUp)
 import Model exposing (Model)
+import Note exposing (Note, Octave, notes)
+import NoteSet exposing (Set)
 import Styles exposing (..)
 import Update exposing (Msg(..))
 
@@ -34,23 +35,25 @@ view model =
         ]
 
 
-viewPiano : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Html Msg
+viewPiano : Set -> Octave -> Html Msg
 viewPiano currentlyPlaying selectedOctave =
     div [ class [ Piano ] ]
-        (List.repeat 7 () |> List.indexedMap (\index _ -> viewOctave currentlyPlaying selectedOctave index))
+        (List.repeat 7 ()
+            |> List.indexedMap (\index _ -> viewOctave currentlyPlaying selectedOctave index)
+        )
 
 
-viewOctave : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Model.Octave -> Model.Octave -> Html Msg
+viewOctave : Set -> Octave -> Octave -> Html Msg
 viewOctave currentlyPlaying selectedOctave octave =
     div [ classList [ ( SelectedOctave, selectedOctave == octave ) ] ] <|
-        List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) Model.notes
+        List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) notes
 
 
-viewKey : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Int -> ( Model.Octave, Model.Note ) -> Html Msg
+viewKey : Set -> Int -> ( Octave, Note ) -> Html Msg
 viewKey currentlyPlaying noteInd noteWithOctave =
     let
         maybeNonNatural =
-            Model.getNonNaturalIndex (Tuple.first noteWithOctave) noteInd
+            Note.getNonNaturalIndex (Tuple.first noteWithOctave) noteInd
 
         leftPosition =
             Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
@@ -60,7 +63,7 @@ viewKey currentlyPlaying noteInd noteWithOctave =
         [ classList
             [ ( Key, True )
             , ( NonNatural, maybeNonNatural /= Nothing )
-            , ( CurrentlyPlaying, AllDict.member noteWithOctave currentlyPlaying )
+            , ( CurrentlyPlaying, NoteSet.member noteWithOctave currentlyPlaying )
             ]
         , style [ ( "left", toString leftPosition ++ "px" ) ]
         , onMouseDown (Update.Play noteWithOctave)
@@ -70,10 +73,10 @@ viewKey currentlyPlaying noteInd noteWithOctave =
         []
 
 
-viewPlayingNotes : AllDict.AllDict ( Model.Octave, Model.Note ) a Float -> Html Msg
+viewPlayingNotes : Set -> Html Msg
 viewPlayingNotes currentlyPlaying =
     currentlyPlaying
-        |> AllDict.keys
+        |> NoteSet.keys
         |> List.map
             (\( octave, note ) ->
                 div []

@@ -4,6 +4,7 @@ import AllDict
 import Html
 import Keyboard
 import Model exposing (Model)
+import Note
 import Platform.Sub as Sub
 import Time
 import Update exposing (update)
@@ -14,7 +15,7 @@ main : Program Never Model Update.Msg
 main =
     Html.program
         { init =
-            ( { currentlyPlaying = AllDict.empty Model.toFrequency
+            ( { currentlyPlaying = AllDict.empty Note.toFrequency
               , played = []
               , octave = 4
               , time = 0

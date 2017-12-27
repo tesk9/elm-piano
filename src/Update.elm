@@ -1,38 +1,36 @@
 port module Update exposing (Msg(..), update, withNote)
 
-import AllDict
-import Model
+import Model exposing (Model)
+import Note exposing (Frequency, Note, Octave)
+import NoteSet
 import Time
-import WebAudio
 
 
 type Msg
     = NoOp
     | HandleKeyDown Int
-    | Play ( Model.Octave, Model.Note )
-    | Stop ( Model.Octave, Model.Note )
+    | Play ( Octave, Note )
+    | Stop ( Octave, Note )
     | Debounce Msg
     | Tick Time.Time
 
 
-update : Msg -> Model.Model -> ( Model.Model, Cmd c )
+update : Msg -> Model -> ( Model, Cmd c )
 update msg model =
     case msg of
         NoOp ->
             model ! []
 
         HandleKeyDown keycode ->
-            (model
+            model
                 |> perhapsPlay keycode
-                |> perhapsChangeOctave keycode
-            )
-                ! []
+                |> Tuple.mapFirst (perhapsChangeOctave keycode)
 
         Play noteWithOctave ->
-            play noteWithOctave model ! [ playNote (Model.toFrequency noteWithOctave) ]
+            play noteWithOctave model
 
         Stop noteWithOctave ->
-            stop noteWithOctave model ! [ stopNote (Model.toFrequency noteWithOctave) ]
+            stop noteWithOctave model
 
         Debounce msg ->
             debounce msg model
@@ -41,59 +39,60 @@ update msg model =
             { model | time = time } ! []
 
 
-withNote : (Model.Note -> Msg) -> Int -> Msg
+withNote : (Note -> Msg) -> Int -> Msg
 withNote msg keycode =
-    Maybe.map msg (Model.toNote keycode)
+    Maybe.map msg (Note.toNote keycode)
         |> Maybe.withDefault NoOp
 
 
-perhapsChangeOctave : Int -> Model.Model -> Model.Model
+perhapsChangeOctave : Int -> Model -> Model
 perhapsChangeOctave keycode model =
-    Model.toOctave keycode
+    Note.toOctave keycode
         |> Maybe.map (\newOctave -> { model | octave = newOctave })
         |> Maybe.withDefault model
 
 
-perhapsPlay : Int -> Model.Model -> Model.Model
+perhapsPlay : Int -> Model -> ( Model, Cmd c )
 perhapsPlay keycode model =
-    Model.toNote keycode
-        |> Maybe.map (\note -> play ( model.octave, note ) model)
-        |> Maybe.withDefault model
+    Note.toNote keycode
+        |> Maybe.map
+            (\note ->
+                play ( model.octave, note ) model
+            )
+        |> Maybe.withDefault ( model, Cmd.none )
 
 
-play : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
+play : ( Octave, Note ) -> Model -> ( Model, Cmd c )
 play noteWithOctave model =
     let
-        newCurrentlyPlaying =
-            if not <| AllDict.member noteWithOctave model.currentlyPlaying then
-                WebAudio.play (Model.toFrequency noteWithOctave)
-                    |> flip (AllDict.insert noteWithOctave) model.currentlyPlaying
-            else
-                model.currentlyPlaying
+        isAlreadyPlaing =
+            NoteSet.member noteWithOctave model.currentlyPlaying
     in
-    { model | currentlyPlaying = newCurrentlyPlaying }
+    if isAlreadyPlaing then
+        ( model, Cmd.none )
+    else
+        ( { model
+            | currentlyPlaying = NoteSet.insert noteWithOctave model.currentlyPlaying
+          }
+        , playNote (Note.toFrequency noteWithOctave)
+        )
 
 
-stop : ( Model.Octave, Model.Note ) -> Model.Model -> Model.Model
+stop : ( Octave, Note ) -> Model -> ( Model, Cmd msg )
 stop noteWithOctave model =
     let
-        stoppedNote =
-            AllDict.get noteWithOctave model.currentlyPlaying
-                |> Maybe.map WebAudio.stop
-
-        newCurrentlyPlaying =
-            AllDict.remove noteWithOctave model.currentlyPlaying
+        frequency =
+            Note.toFrequency noteWithOctave
     in
-    { model
-        | currentlyPlaying = newCurrentlyPlaying
-        , played =
-            stoppedNote
-                |> Maybe.map (\_ -> [ noteWithOctave ] :: model.played)
-                |> Maybe.withDefault model.played
-    }
+    ( { model
+        | currentlyPlaying = NoteSet.remove noteWithOctave model.currentlyPlaying
+        , played = [ frequency ] :: model.played
+      }
+    , stopNote frequency
+    )
 
 
-debounce : Msg -> Model.Model -> ( Model.Model, Cmd c )
+debounce : Msg -> Model -> ( Model, Cmd c )
 debounce msg model =
     let
         perhapsUpdate lastTime =
