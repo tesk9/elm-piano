@@ -1,6 +1,5 @@
 port module Main exposing (main)
 
-import AllDict
 import Html exposing (..)
 import Html.Attributes exposing (autofocus, style)
 import Html.CssHelpers
@@ -17,7 +16,7 @@ main : Program Never Model Msg
 main =
     Html.program
         { init =
-            ( { currentlyPlaying = AllDict.empty Note.toFrequency
+            ( { currentlyPlaying = NoteSet.empty
               , played = []
               , octave = 4
               , time = 0
@@ -102,7 +101,7 @@ viewKey currentlyPlaying noteInd noteWithOctave =
             , ( NonNatural, maybeNonNatural /= Nothing )
             , ( CurrentlyPlaying, NoteSet.member noteWithOctave currentlyPlaying )
             ]
-        , style [ ( "left", toString leftPosition ++ "px" ) ]
+        , style "left" (toString leftPosition ++ "px")
         , onMouseDown (Play noteWithOctave)
         , onMouseLeave (Stop noteWithOctave)
         , onMouseUp (Stop noteWithOctave)
@@ -140,7 +139,9 @@ update : Msg -> Model -> ( Model, Cmd c )
 update msg model =
     case msg of
         NoOp ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
         HandleKeyDown keycode ->
             model
@@ -157,7 +158,9 @@ update msg model =
             debounce msg model
 
         Tick time ->
-            { model | time = time } ! []
+            ( { model | time = time }
+            , Cmd.none
+            )
 
 
 withNote : (Note -> Msg) -> Int -> Msg
@@ -191,6 +194,7 @@ play noteWithOctave model =
     in
     if isAlreadyPlaing then
         ( model, Cmd.none )
+
     else
         ( { model
             | currentlyPlaying = NoteSet.insert noteWithOctave model.currentlyPlaying
@@ -219,8 +223,11 @@ debounce msg model =
         perhapsUpdate lastTime =
             if model.time - lastTime > 20 then
                 update msg model
+
             else
-                model ! []
+                ( model
+                , Cmd.none
+                )
     in
     model.debouncer
         |> Maybe.map perhapsUpdate

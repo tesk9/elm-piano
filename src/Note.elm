@@ -178,10 +178,11 @@ getNonNaturalIndex octave noteInd =
                 |> (+) (octave * 7)
 
         position =
-            noteInd % 5
+            modBy 5 noteInd
     in
     Maybe.map toFloat <|
         if position == 1 || position == 4 then
             Just leftPositioning
+
         else
             Nothing

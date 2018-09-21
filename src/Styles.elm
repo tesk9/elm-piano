@@ -1,13 +1,12 @@
-module Styles
-    exposing
-        ( Classes(..)
-        , class
-        , classList
-        , css
-        , for
-        , id
-        , snippets
-        )
+module Styles exposing
+    ( Classes(..)
+    , class
+    , classList
+    , css
+    , for
+    , id
+    , snippets
+    )
 
 import Css exposing (..)
 import Css.Namespace exposing (namespace)
