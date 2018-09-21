@@ -1,14 +1,14 @@
 port module Main exposing (main)
 
---import Keyboard
-
 import Browser
+import Browser.Events
 import Css exposing (..)
 import Css.Global exposing (descendants, everything)
 import Html.Attributes exposing (autofocus, style)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onMouseDown, onMouseLeave, onMouseUp)
+import Json.Decode as Json
 import Note exposing (Frequency, Note, Octave, notes)
 import NoteSet exposing (Set)
 import Platform.Sub as Sub
@@ -215,12 +215,6 @@ update msg model =
             )
 
 
-withNote : (Note -> Msg) -> Int -> Msg
-withNote msg keycode =
-    Maybe.map msg (Note.toNote keycode)
-        |> Maybe.withDefault NoOp
-
-
 perhapsChangeOctave : Int -> Model -> Model
 perhapsChangeOctave keycode model =
     Note.toOctave keycode
@@ -304,7 +298,17 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ always (Time.every 1000 Tick) model
-
-        --, Keyboard.downs (Debounce << HandleKeyDown)
-        --, Keyboard.ups (withNote (\note -> Stop ( model.octave, note )))
+        , Browser.Events.onKeyDown (Json.map (HandleKeyDown >> Debounce) keyCode)
+        , Browser.Events.onKeyUp (Json.map (withNote (\note -> Stop ( model.octave, note ))) keyCode)
         ]
+
+
+keyCode : Json.Decoder Int
+keyCode =
+    Json.field "keyCode" Json.int
+
+
+withNote : (Note -> Msg) -> Int -> Msg
+withNote msg keycode =
+    Maybe.map msg (Note.toNote keycode)
+        |> Maybe.withDefault NoOp
