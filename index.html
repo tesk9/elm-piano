@@ -6527,6 +6527,7 @@ var rtfeldman$elm_css$Css$hex = function (str) {
 	return rtfeldman$elm_css$Css$erroneousHex(str);
 };
 var rtfeldman$elm_css$Css$hover = rtfeldman$elm_css$Css$pseudoClass('hover');
+var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
 var rtfeldman$elm_css$Css$none = {backgroundImage: rtfeldman$elm_css$Css$Structure$Compatible, blockAxisOverflow: rtfeldman$elm_css$Css$Structure$Compatible, borderStyle: rtfeldman$elm_css$Css$Structure$Compatible, cursor: rtfeldman$elm_css$Css$Structure$Compatible, display: rtfeldman$elm_css$Css$Structure$Compatible, hoverCapability: rtfeldman$elm_css$Css$Structure$Compatible, inlineAxisOverflow: rtfeldman$elm_css$Css$Structure$Compatible, keyframes: rtfeldman$elm_css$Css$Structure$Compatible, lengthOrNone: rtfeldman$elm_css$Css$Structure$Compatible, lengthOrNoneOrMinMaxDimension: rtfeldman$elm_css$Css$Structure$Compatible, lengthOrNumberOrAutoOrNoneOrContent: rtfeldman$elm_css$Css$Structure$Compatible, listStyleType: rtfeldman$elm_css$Css$Structure$Compatible, listStyleTypeOrPositionOrImage: rtfeldman$elm_css$Css$Structure$Compatible, none: rtfeldman$elm_css$Css$Structure$Compatible, outline: rtfeldman$elm_css$Css$Structure$Compatible, pointerDevice: rtfeldman$elm_css$Css$Structure$Compatible, pointerEvents: rtfeldman$elm_css$Css$Structure$Compatible, resize: rtfeldman$elm_css$Css$Structure$Compatible, scriptingSupport: rtfeldman$elm_css$Css$Structure$Compatible, textDecorationLine: rtfeldman$elm_css$Css$Structure$Compatible, textTransform: rtfeldman$elm_css$Css$Structure$Compatible, touchAction: rtfeldman$elm_css$Css$Structure$Compatible, transform: rtfeldman$elm_css$Css$Structure$Compatible, updateFrequency: rtfeldman$elm_css$Css$Structure$Compatible, value: 'none'};
 var rtfeldman$elm_css$Css$outline = rtfeldman$elm_css$Css$prop1('outline');
 var rtfeldman$elm_css$Css$position = rtfeldman$elm_css$Css$prop1('position');
@@ -8384,7 +8385,9 @@ var author$project$Main$viewKey = F3(
 									_List_fromArray(
 										[
 											rtfeldman$elm_css$Css$outline(rtfeldman$elm_css$Css$none)
-										]))
+										])),
+									rtfeldman$elm_css$Css$left(
+									rtfeldman$elm_css$Css$px(leftPosition))
 								]),
 								function () {
 								var _n0 = _Utils_Tuple2(isCurrentlyPlaying, isNonNaturual);
@@ -8512,6 +8515,34 @@ var author$project$Main$viewPiano = F2(
 					}),
 				A2(elm$core$List$repeat, 7, _Utils_Tuple0)));
 	});
+var author$project$Note$toString = function (note) {
+	switch (note.$) {
+		case 'A':
+			return 'A';
+		case 'AB':
+			return 'AB';
+		case 'B':
+			return 'B';
+		case 'C':
+			return 'C';
+		case 'CD':
+			return 'CD';
+		case 'D':
+			return 'D';
+		case 'DE':
+			return 'DE';
+		case 'E':
+			return 'E';
+		case 'F':
+			return 'F';
+		case 'FG':
+			return 'FG';
+		case 'G':
+			return 'G';
+		default:
+			return 'GA';
+	}
+};
 var elm$core$Dict$values = function (dict) {
 	return A3(
 		elm$core$Dict$foldr,
@@ -8554,7 +8585,8 @@ var author$project$Main$viewPlayingNotes = function (currentlyPlaying) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Html$Styled$text('TODO: handle toString uses')
+							rtfeldman$elm_css$Html$Styled$text(
+							'Octave: ' + (elm$core$String$fromInt(octave) + (' | ' + ('Note: ' + author$project$Note$toString(note)))))
 						]));
 			},
 			author$project$NoteSet$keys(currentlyPlaying)));

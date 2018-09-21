@@ -1,4 +1,4 @@
-module Note exposing (Frequency, Note, Octave, getNonNaturalIndex, notes, toFrequency, toNote, toOctave)
+module Note exposing (Frequency, Note, Octave, getNonNaturalIndex, notes, toFrequency, toNote, toOctave, toString)
 
 
 type Note
@@ -14,6 +14,45 @@ type Note
     | FG
     | G
     | GA
+
+
+toString note =
+    case note of
+        A ->
+            "A"
+
+        AB ->
+            "AB"
+
+        B ->
+            "B"
+
+        C ->
+            "C"
+
+        CD ->
+            "CD"
+
+        D ->
+            "D"
+
+        DE ->
+            "DE"
+
+        E ->
+            "E"
+
+        F ->
+            "F"
+
+        FG ->
+            "FG"
+
+        G ->
+            "G"
+
+        GA ->
+            "GA"
 
 
 notes : List Note

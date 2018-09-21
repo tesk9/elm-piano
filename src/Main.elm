@@ -127,6 +127,7 @@ viewKey currentlyPlaying noteInd noteWithOctave =
                   , backgroundColor (hex "#fffff0")
                   , hover [ keyEmphasis (hex "#FFDAB9") ]
                   , focus [ outline none ]
+                  , left (px leftPosition)
                   ]
                 , case ( isCurrentlyPlaying, isNonNaturual ) of
                     ( True, False ) ->
@@ -145,9 +146,6 @@ viewKey currentlyPlaying noteInd noteWithOctave =
                         []
                 ]
             )
-
-        --TODO: handle toString use
-        --, style "left" (toString leftPosition ++ "px")
         , onMouseDown (Play noteWithOctave)
         , onMouseLeave (Stop noteWithOctave)
         , onMouseUp (Stop noteWithOctave)
@@ -170,9 +168,7 @@ viewPlayingNotes currentlyPlaying =
         |> List.map
             (\( octave, note ) ->
                 div []
-                    [ text "TODO: handle toString uses"
-
-                    --[ text <| "Octave: " ++ toString octave ++ " | " ++ "Note: " ++ toString note
+                    [ text <| "Octave: " ++ String.fromInt octave ++ " | " ++ "Note: " ++ Note.toString note
                     ]
             )
         |> div []
