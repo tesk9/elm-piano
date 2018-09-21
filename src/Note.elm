@@ -1,68 +1,4 @@
-module Model exposing (..)
-
-import AllDict
-import Flags exposing (Flags)
-import Time
-import WebAudio
-
-
-type alias Model =
-    { currentlyPlaying : AllDict.AllDict ( Octave, Note ) WebAudio.Stream Float
-    , played : List (List ( Octave, Note ))
-    , octave : Octave
-    , time : Time.Time
-    , debouncer : Maybe Time.Time
-    }
-
-
-init : Flags -> Model
-init flags =
-    { currentlyPlaying = AllDict.empty toFrequency
-    , played = []
-    , octave = 4
-    , time = 0
-    , debouncer = Nothing
-    }
-
-
-notes : List Note
-notes =
-    [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA ]
-
-
-type alias Octave =
-    Int
-
-
-toOctave : Int -> Maybe Octave
-toOctave keycode =
-    case keycode of
-        49 ->
-            Just 0
-
-        50 ->
-            Just 1
-
-        51 ->
-            Just 2
-
-        52 ->
-            Just 3
-
-        53 ->
-            Just 4
-
-        54 ->
-            Just 5
-
-        55 ->
-            Just 6
-
-        56 ->
-            Just 7
-
-        _ ->
-            Nothing
+module Note exposing (Frequency, Note, Octave, getNonNaturalIndex, notes, toFrequency, toNote, toOctave)
 
 
 type Note
@@ -78,6 +14,11 @@ type Note
     | FG
     | G
     | GA
+
+
+notes : List Note
+notes =
+    [ A, AB, B, C, CD, D, DE, E, F, FG, G, GA ]
 
 
 toNote : Int -> Maybe Note
@@ -130,6 +71,45 @@ toNote keycode =
         73 ->
             {- i -}
             Just GA
+
+        _ ->
+            Nothing
+
+
+type alias Frequency =
+    Float
+
+
+type alias Octave =
+    Int
+
+
+toOctave : Int -> Maybe Octave
+toOctave keycode =
+    case keycode of
+        49 ->
+            Just 0
+
+        50 ->
+            Just 1
+
+        51 ->
+            Just 2
+
+        52 ->
+            Just 3
+
+        53 ->
+            Just 4
+
+        54 ->
+            Just 5
+
+        55 ->
+            Just 6
+
+        56 ->
+            Just 7
 
         _ ->
             Nothing
@@ -200,8 +180,8 @@ getNonNaturalIndex octave noteInd =
         position =
             noteInd % 5
     in
-        Maybe.map toFloat <|
-            if position == 1 || position == 4 then
-                Just leftPositioning
-            else
-                Nothing
+    Maybe.map toFloat <|
+        if position == 1 || position == 4 then
+            Just leftPositioning
+        else
+            Nothing

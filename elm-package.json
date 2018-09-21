@@ -3,12 +3,9 @@
     "summary": "helpful summary of your project, less than 80 characters",
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
-    "source-directories": [
-        "src",
-        "utils"
-    ],
+    "source-directories": ["src"],
     "exposed-modules": [],
-    "native-modules": true,
+    "native-modules": false,
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
         "eeue56/elm-all-dict": "2.0.1 <= v < 3.0.0",
