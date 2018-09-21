@@ -4872,78 +4872,6 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$int = _Json_decodeInt;
 var author$project$Main$keyCode = A2(elm$json$Json$Decode$field, 'keyCode', elm$json$Json$Decode$int);
-var author$project$Main$NoOp = {$: 'NoOp'};
-var author$project$Note$A = {$: 'A'};
-var author$project$Note$AB = {$: 'AB'};
-var author$project$Note$B = {$: 'B'};
-var author$project$Note$C = {$: 'C'};
-var author$project$Note$CD = {$: 'CD'};
-var author$project$Note$D = {$: 'D'};
-var author$project$Note$DE = {$: 'DE'};
-var author$project$Note$E = {$: 'E'};
-var author$project$Note$F = {$: 'F'};
-var author$project$Note$FG = {$: 'FG'};
-var author$project$Note$G = {$: 'G'};
-var author$project$Note$GA = {$: 'GA'};
-var author$project$Note$toNote = function (keycode) {
-	switch (keycode) {
-		case 65:
-			return elm$core$Maybe$Just(author$project$Note$A);
-		case 87:
-			return elm$core$Maybe$Just(author$project$Note$AB);
-		case 83:
-			return elm$core$Maybe$Just(author$project$Note$B);
-		case 68:
-			return elm$core$Maybe$Just(author$project$Note$C);
-		case 82:
-			return elm$core$Maybe$Just(author$project$Note$CD);
-		case 70:
-			return elm$core$Maybe$Just(author$project$Note$D);
-		case 84:
-			return elm$core$Maybe$Just(author$project$Note$DE);
-		case 71:
-			return elm$core$Maybe$Just(author$project$Note$E);
-		case 72:
-			return elm$core$Maybe$Just(author$project$Note$F);
-		case 85:
-			return elm$core$Maybe$Just(author$project$Note$FG);
-		case 74:
-			return elm$core$Maybe$Just(author$project$Note$G);
-		case 73:
-			return elm$core$Maybe$Just(author$project$Note$GA);
-		default:
-			return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
-	});
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var author$project$Main$withNote = F2(
-	function (msg, keycode) {
-		return A2(
-			elm$core$Maybe$withDefault,
-			author$project$Main$NoOp,
-			A2(
-				elm$core$Maybe$map,
-				msg,
-				author$project$Note$toNote(keycode)));
-	});
 var elm$browser$Browser$Events$Document = {$: 'Document'};
 var elm$browser$Browser$Events$MySub = F3(
 	function (a, b, c) {
@@ -5658,7 +5586,87 @@ var elm$browser$Browser$Events$on = F3(
 			A3(elm$browser$Browser$Events$MySub, node, name, decoder));
 	});
 var elm$browser$Browser$Events$onKeyDown = A2(elm$browser$Browser$Events$on, elm$browser$Browser$Events$Document, 'keydown');
+var author$project$Main$downs = function (msg) {
+	return elm$browser$Browser$Events$onKeyDown(
+		A2(elm$json$Json$Decode$map, msg, author$project$Main$keyCode));
+};
 var elm$browser$Browser$Events$onKeyUp = A2(elm$browser$Browser$Events$on, elm$browser$Browser$Events$Document, 'keyup');
+var author$project$Main$ups = function (msg) {
+	return elm$browser$Browser$Events$onKeyUp(
+		A2(elm$json$Json$Decode$map, msg, author$project$Main$keyCode));
+};
+var author$project$Main$NoOp = {$: 'NoOp'};
+var author$project$Note$A = {$: 'A'};
+var author$project$Note$AB = {$: 'AB'};
+var author$project$Note$B = {$: 'B'};
+var author$project$Note$C = {$: 'C'};
+var author$project$Note$CD = {$: 'CD'};
+var author$project$Note$D = {$: 'D'};
+var author$project$Note$DE = {$: 'DE'};
+var author$project$Note$E = {$: 'E'};
+var author$project$Note$F = {$: 'F'};
+var author$project$Note$FG = {$: 'FG'};
+var author$project$Note$G = {$: 'G'};
+var author$project$Note$GA = {$: 'GA'};
+var author$project$Note$toNote = function (keycode) {
+	switch (keycode) {
+		case 65:
+			return elm$core$Maybe$Just(author$project$Note$A);
+		case 87:
+			return elm$core$Maybe$Just(author$project$Note$AB);
+		case 83:
+			return elm$core$Maybe$Just(author$project$Note$B);
+		case 68:
+			return elm$core$Maybe$Just(author$project$Note$C);
+		case 82:
+			return elm$core$Maybe$Just(author$project$Note$CD);
+		case 70:
+			return elm$core$Maybe$Just(author$project$Note$D);
+		case 84:
+			return elm$core$Maybe$Just(author$project$Note$DE);
+		case 71:
+			return elm$core$Maybe$Just(author$project$Note$E);
+		case 72:
+			return elm$core$Maybe$Just(author$project$Note$F);
+		case 85:
+			return elm$core$Maybe$Just(author$project$Note$FG);
+		case 74:
+			return elm$core$Maybe$Just(author$project$Note$G);
+		case 73:
+			return elm$core$Maybe$Just(author$project$Note$GA);
+		default:
+			return elm$core$Maybe$Nothing;
+	}
+};
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var author$project$Main$withNote = F2(
+	function (msg, keycode) {
+		return A2(
+			elm$core$Maybe$withDefault,
+			author$project$Main$NoOp,
+			A2(
+				elm$core$Maybe$map,
+				msg,
+				author$project$Note$toNote(keycode)));
+	});
 var elm$core$Basics$always = F2(
 	function (a, _n0) {
 		return a;
@@ -5893,20 +5901,14 @@ var author$project$Main$subscriptions = function (model) {
 				elm$core$Basics$always,
 				A2(elm$time$Time$every, 1000, author$project$Main$Tick),
 				model),
-				elm$browser$Browser$Events$onKeyDown(
-				A2(
-					elm$json$Json$Decode$map,
-					A2(elm$core$Basics$composeR, author$project$Main$HandleKeyDown, author$project$Main$Debounce),
-					author$project$Main$keyCode)),
-				elm$browser$Browser$Events$onKeyUp(
-				A2(
-					elm$json$Json$Decode$map,
-					author$project$Main$withNote(
-						function (note) {
-							return author$project$Main$Stop(
-								_Utils_Tuple2(model.octave, note));
-						}),
-					author$project$Main$keyCode))
+				author$project$Main$downs(
+				A2(elm$core$Basics$composeR, author$project$Main$HandleKeyDown, author$project$Main$Debounce)),
+				author$project$Main$ups(
+				author$project$Main$withNote(
+					function (note) {
+						return author$project$Main$Stop(
+							_Utils_Tuple2(model.octave, note));
+					}))
 			]));
 };
 var author$project$Note$toOctave = function (keycode) {

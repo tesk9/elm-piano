@@ -298,17 +298,27 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ always (Time.every 1000 Tick) model
-        , Browser.Events.onKeyDown (Json.map (HandleKeyDown >> Debounce) keyCode)
-        , Browser.Events.onKeyUp (Json.map (withNote (\note -> Stop ( model.octave, note ))) keyCode)
+        , downs (HandleKeyDown >> Debounce)
+        , ups (withNote (\note -> Stop ( model.octave, note )))
         ]
-
-
-keyCode : Json.Decoder Int
-keyCode =
-    Json.field "keyCode" Json.int
 
 
 withNote : (Note -> Msg) -> Int -> Msg
 withNote msg keycode =
     Maybe.map msg (Note.toNote keycode)
         |> Maybe.withDefault NoOp
+
+
+downs : (Int -> Msg) -> Sub Msg
+downs msg =
+    Browser.Events.onKeyDown (Json.map msg keyCode)
+
+
+ups : (Int -> Msg) -> Sub Msg
+ups msg =
+    Browser.Events.onKeyUp (Json.map msg keyCode)
+
+
+keyCode : Json.Decoder Int
+keyCode =
+    Json.field "keyCode" Json.int
