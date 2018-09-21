@@ -1,32 +1,35 @@
 port module Main exposing (main)
 
-import Html exposing (..)
+--import Keyboard
+
+import Browser
+import Css exposing (..)
+import Css.Global exposing (descendants, everything)
 import Html.Attributes exposing (autofocus, style)
-import Html.CssHelpers
-import Html.Events exposing (onMouseDown, onMouseLeave, onMouseUp)
-import Keyboard
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css)
+import Html.Styled.Events exposing (onMouseDown, onMouseLeave, onMouseUp)
 import Note exposing (Frequency, Note, Octave, notes)
 import NoteSet exposing (Set)
 import Platform.Sub as Sub
-import Styles exposing (..)
 import Time
 
 
-main : Program Never Model Msg
 main =
-    Html.program
+    Browser.element
         { init =
-            ( { currentlyPlaying = NoteSet.empty
-              , played = []
-              , octave = 4
-              , time = 0
-              , debouncer = Nothing
-              }
-            , Cmd.none
-            )
+            \() ->
+                ( { currentlyPlaying = NoteSet.empty
+                  , played = []
+                  , octave = 4
+                  , time = Time.millisToPosix 0
+                  , debouncer = Nothing
+                  }
+                , Cmd.none
+                )
         , update = update
         , subscriptions = subscriptions
-        , view = view
+        , view = \model -> view model |> toUnstyled
         }
 
 
@@ -38,8 +41,8 @@ type alias Model =
     { currentlyPlaying : NoteSet.Set
     , played : List (List Frequency)
     , octave : Octave
-    , time : Time.Time
-    , debouncer : Maybe Time.Time
+    , time : Time.Posix
+    , debouncer : Maybe Time.Posix
     }
 
 
@@ -50,10 +53,8 @@ type alias Model =
 view : Model -> Html Msg
 view model =
     div
-        [ class [ Container ]
-        ]
-        [ Html.CssHelpers.style css
-        , h1 [] [ text "Elm Piano" ]
+        [ css [ descendants [ everything [ boxSizing borderBox ] ] ] ]
+        [ h1 [] [ text "Elm Piano" ]
         , viewPiano model.currentlyPlaying model.octave
         , h2 [] [ text "Playing the Elm Piano" ]
         , p [] [ text "Play the piano via point-and-click or via your keyboard." ]
@@ -73,7 +74,14 @@ view model =
 
 viewPiano : Set -> Octave -> Html Msg
 viewPiano currentlyPlaying selectedOctave =
-    div [ class [ Piano ] ]
+    div
+        [ css
+            [ displayFlex
+            , position relative
+            , border3 (px 1) solid (hex "#4A4A4A")
+            , width (px <| 20 * 7 * 7 + 2)
+            ]
+        ]
         (List.repeat 7 ()
             |> List.indexedMap (\index _ -> viewOctave currentlyPlaying selectedOctave index)
         )
@@ -81,8 +89,16 @@ viewPiano currentlyPlaying selectedOctave =
 
 viewOctave : Set -> Octave -> Octave -> Html Msg
 viewOctave currentlyPlaying selectedOctave octave =
-    div [ classList [ ( SelectedOctave, selectedOctave == octave ) ] ] <|
-        List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) notes
+    div
+        [ css
+            (if selectedOctave == octave then
+                [ borderBottom3 (px 1) solid (hex "#0000FF") ]
+
+             else
+                []
+            )
+        ]
+        (List.indexedMap (\index note -> viewKey currentlyPlaying index ( octave, note )) notes)
 
 
 viewKey : Set -> Int -> ( Octave, Note ) -> Html Msg
@@ -94,19 +110,57 @@ viewKey currentlyPlaying noteInd noteWithOctave =
         leftPosition =
             Maybe.map (\n -> 20 * n - 15 / 2) maybeNonNatural
                 |> Maybe.withDefault 0
+
+        isCurrentlyPlaying =
+            NoteSet.member noteWithOctave currentlyPlaying
+
+        isNonNaturual =
+            maybeNonNatural /= Nothing
     in
     button
-        [ classList
-            [ ( Key, True )
-            , ( NonNatural, maybeNonNatural /= Nothing )
-            , ( CurrentlyPlaying, NoteSet.member noteWithOctave currentlyPlaying )
-            ]
-        , style "left" (toString leftPosition ++ "px")
+        [ css
+            (List.concat
+                [ [ height (px 200)
+                  , width (px 20)
+                  , border3 (px 1) solid (hex "#4A4A4A")
+                  , borderTopWidth (px 0)
+                  , backgroundColor (hex "#fffff0")
+                  , hover [ keyEmphasis (hex "#FFDAB9") ]
+                  , focus [ outline none ]
+                  ]
+                , case ( isCurrentlyPlaying, isNonNaturual ) of
+                    ( True, False ) ->
+                        [ keyEmphasis (hex "#fffef0") ]
+
+                    ( _, True ) ->
+                        [ keyEmphasis (hex "#000000")
+                        , height (px 140)
+                        , width (px 15)
+                        , position absolute
+                        , backgroundColor (hex "#2A1E1B")
+                        , hover [ keyEmphasis (hex "#400000") ]
+                        ]
+
+                    ( False, False ) ->
+                        []
+                ]
+            )
+
+        --TODO: handle toString use
+        --, style "left" (toString leftPosition ++ "px")
         , onMouseDown (Play noteWithOctave)
         , onMouseLeave (Stop noteWithOctave)
         , onMouseUp (Stop noteWithOctave)
         ]
         []
+
+
+keyEmphasis color =
+    batch
+        [ backgroundColor color
+        , property "border-image" ("linear-gradient(to top, " ++ color.value ++ ", #4A4A4A) 1 100%")
+        , cursor pointer
+        ]
 
 
 viewPlayingNotes : Set -> Html Msg
@@ -116,7 +170,9 @@ viewPlayingNotes currentlyPlaying =
         |> List.map
             (\( octave, note ) ->
                 div []
-                    [ text <| "Octave: " ++ toString octave ++ " | " ++ "Note: " ++ toString note
+                    [ text "TODO: handle toString uses"
+
+                    --[ text <| "Octave: " ++ toString octave ++ " | " ++ "Note: " ++ toString note
                     ]
             )
         |> div []
@@ -132,7 +188,7 @@ type Msg
     | Play ( Octave, Note )
     | Stop ( Octave, Note )
     | Debounce Msg
-    | Tick Time.Time
+    | Tick Time.Posix
 
 
 update : Msg -> Model -> ( Model, Cmd c )
@@ -154,8 +210,8 @@ update msg model =
         Stop noteWithOctave ->
             stop noteWithOctave model
 
-        Debounce msg ->
-            debounce msg model
+        Debounce subMsg ->
+            debounce subMsg model
 
         Tick time ->
             ( { model | time = time }
@@ -221,7 +277,7 @@ debounce : Msg -> Model -> ( Model, Cmd c )
 debounce msg model =
     let
         perhapsUpdate lastTime =
-            if model.time - lastTime > 20 then
+            if Time.posixToMillis model.time - Time.posixToMillis lastTime > 20 then
                 update msg model
 
             else
@@ -251,7 +307,8 @@ port stopNote : Float -> Cmd msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ always (Time.every Time.millisecond Tick) model
-        , Keyboard.downs (Debounce << HandleKeyDown)
-        , Keyboard.ups (withNote (\note -> Stop ( model.octave, note )))
+        [ always (Time.every 1000 Tick) model
+
+        --, Keyboard.downs (Debounce << HandleKeyDown)
+        --, Keyboard.ups (withNote (\note -> Stop ( model.octave, note )))
         ]
