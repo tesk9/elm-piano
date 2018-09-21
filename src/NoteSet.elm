@@ -1,33 +1,33 @@
 module NoteSet exposing (Set, empty, insert, keys, member, remove)
 
-import AllDict exposing (AllDict)
+import Dict.Any as AnyDict exposing (AnyDict)
 import Note exposing (Frequency, Note, Octave, toFrequency)
 
 
 type alias Set =
-    AllDict ( Octave, Note ) () Frequency
+    AnyDict Float ( Octave, Note ) ()
 
 
 empty : Set
 empty =
-    AllDict.empty toFrequency
+    AnyDict.empty toFrequency
 
 
 insert : ( Octave, Note ) -> Set -> Set
 insert key set =
-    AllDict.insert key () set
+    AnyDict.insert key () set
 
 
 remove : ( Octave, Note ) -> Set -> Set
 remove =
-    AllDict.remove
+    AnyDict.remove
 
 
 member : ( Octave, Note ) -> Set -> Bool
 member =
-    AllDict.member
+    AnyDict.member
 
 
 keys : Set -> List ( Octave, Note )
 keys =
-    AllDict.keys
+    AnyDict.keys
