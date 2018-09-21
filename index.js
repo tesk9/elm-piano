@@ -1,4 +1,6 @@
-var piano = Elm.Main.fullscreen()
+var piano = Elm.Main.init({
+    node: document.getElementById("elm-node")
+})
 
 var Piano = Player()
 
